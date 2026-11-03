@@ -1,0 +1,9 @@
+node_modules/
+release/
+launch-evidence.json
+.env
+.env.*
+!.env.production.example
+approved-privacy.html
+*.log
+.DS_Store

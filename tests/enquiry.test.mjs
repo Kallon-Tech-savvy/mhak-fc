@@ -1,0 +1,24 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {onRequestPost,onRequestGet} from '../functions/api/enquiry.js';
+const env={ENQUIRIES_ENABLED:'true',PRIVACY_NOTICE_APPROVED:'true',MHAK_CONTACT_TO:'mhak@alhajikallon.com',MHAK_CONTACT_FROM:'mhak@alhajikallon.com',TURNSTILE_SECRET_KEY:'secret',PUBLIC_ORIGIN:'https://mhak.alhajikallon.com',RESEND_API_KEY:'re-test'};
+const data={role:'player',name:'Test Adult',email:'adult@example.org',message:'I would like to learn about future opportunities for adult players.',adult:true,consent:true,turnstileToken:'valid-token',website:''};
+const make=(body=data,headers={}) => new Request('https://mhak.alhajikallon.com/api/enquiry',{method:'POST',headers:{'Origin':'https://mhak.alhajikallon.com','Content-Type':'application/json',...headers},body:typeof body==='string'?body:JSON.stringify(body)});
+const call=(request=make(),e=env)=>onRequestPost({request,env:e});
+const mockFetch = fn => {const original=globalThis.fetch;globalThis.fetch=fn;return ()=>{globalThis.fetch=original;};};
+test('without configured delivery the API remains closed',async()=>{const r=await call(make(),{});assert.equal(r.status,503);assert.match((await r.json()).message,/not yet available/);});
+test('disallowed Origin is rejected',async()=>{const r=await call(make(data,{Origin:'https://other.test'}));assert.equal(r.status,403);});
+test('malformed and oversized payloads rejected',async()=>{assert.equal((await call(make('not-json'))).status,400);assert.equal((await call(make('x'.repeat(8193)))).status,413);});
+test('consent, adulthood, role and message are checked',async()=>{for(const changes of [{adult:false},{consent:false},{role:'administrator'},{message:'short'},{email:'bad'}]){assert.equal((await call(make({...data,...changes}))).status,400);}});
+test('honeypot avoids network calls',async()=>{const restore=mockFetch(()=>{throw Error('Should not fetch')});try{const r=await call(make({...data,website:'spam'}));assert.equal(r.status,200);}finally{restore();}});
+test('invalid Turnstile token must not send email',async()=>{let calls=0;const restore=mockFetch(async()=>{calls++;return Response.json({success:false,hostname:'mhak.alhajikallon.com',action:'mhak_enquiry'});});try{assert.equal((await call()).status,403);assert.equal(calls,1);}finally{restore();}});
+test('hostname mismatch must not send email',async()=>{const restore=mockFetch(async()=>Response.json({success:true,hostname:'attacker.test'}));try{assert.equal((await call()).status,403);}finally{restore();}});
+test('verified enquiry sends to configured admin destination',async()=>{const calls=[];const restore=mockFetch(async(url,opts)=>{calls.push({url,opts});if(String(url).includes('siteverify'))return Response.json({success:true,hostname:'mhak.alhajikallon.com',action:'mhak_enquiry'});return Response.json({id:'test-email-id'});});try{const r=await call();assert.equal(r.status,200);assert.deepEqual(await r.json(),{ok:true});assert.equal(calls.length,2);const mail=JSON.parse(calls[1].opts.body);assert.deepEqual(mail.to,['mhak@alhajikallon.com']);assert.equal(mail.reply_to,'adult@example.org');assert.equal(mail.from,'mhak@alhajikallon.com');assert.ok(!JSON.stringify(mail).includes('valid-token'));}finally{restore();}});
+test('email provider failure returns error, not success',async()=>{let calls=0;const restore=mockFetch(async()=>{calls++;return calls===1?Response.json({success:true,hostname:'mhak.alhajikallon.com',action:'mhak_enquiry'}):Response.json({error:'no delivery'},{status:403});});try{assert.equal((await call()).status,502);}finally{restore();}});
+test('GET is not supported',async()=>{assert.equal((await onRequestGet()).status,405);});
+
+test('privacy approval flag is required for delivery',async()=>{const r=await call(make(),{...env,PRIVACY_NOTICE_APPROVED:'false'});assert.equal(r.status,503);});
+test('unexpected request host is rejected',async()=>{const different=new Request('https://wrong.example/api/enquiry',{method:'POST',headers:{Origin:'https://mhak.alhajikallon.com','Content-Type':'application/json'},body:JSON.stringify(data)});assert.equal((await call(different)).status,403);});
+test('Turnstile action mismatch fails closed',async()=>{const restore=mockFetch(async()=>Response.json({success:true,hostname:'mhak.alhajikallon.com',action:'other_form'}));try{assert.equal((await call()).status,403);}finally{restore();}});
+test('a 200 email response without message ID is not success',async()=>{let calls=0;const restore=mockFetch(async()=>++calls===1?Response.json({success:true,hostname:'mhak.alhajikallon.com',action:'mhak_enquiry'}):Response.json({error:'no accepted message'}));try{assert.equal((await call()).status,502);assert.equal(calls,2);}finally{restore();}});
+test('newline in name is rejected',async()=>{assert.equal((await call(make({...data,name:'Test\r\nInjected'}))).status,400);});
