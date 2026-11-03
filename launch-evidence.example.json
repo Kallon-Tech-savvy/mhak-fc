@@ -1,0 +1,18 @@
+{
+  "domain": "mhak.alhajikallon.com",
+  "clubEmail": "mhak@alhajikallon.com",
+  "checks": {
+    "clubIdentityAndCopyApproved": false,
+    "approvedLogoSelected": false,
+    "domainDnsAndTlsVerified": false,
+    "inboxReceivesExternalMail": false,
+    "outboundReplyVerified": false,
+    "privacyNoticeApproved": false,
+    "safeguardingProcessApproved": false,
+    "resendSendingDomainVerified": false,
+    "turnstileProductionKeysConfigured": false,
+    "cloudflareWafRateLimitConfigured": false,
+    "liveEndToEndEnquiryDeliveryTestPassed": false
+  },
+  "notes": "Working copy only. Change flags to true only after independently checking each fact. Keep this private file out of public/. Never store keys in it."
+}

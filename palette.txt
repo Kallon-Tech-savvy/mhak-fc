@@ -1,0 +1,10 @@
+MHAK FC digital palette v1 — proposed values
+Primary: Obsidian Blue — #17283C
+Accent: Dark Orange — #B84E1B
+Secondary: Steel Grey — #8795A3
+Ink: Black — #101820
+Paper: White — #F7F9FB
+
+Proposed use: 55% white and light surfaces, 30% obsidian, 10% steel, 5% dark orange.
+This is not a fixed rule for every composition. Use orange as a controlled CTA and storytelling accent.
+Do not use orange as small text on blue. Avoid recolouring the core logo until the production master is approved.
