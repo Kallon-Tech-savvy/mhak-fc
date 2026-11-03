@@ -1,40 +1,45 @@
-# MHAK FC — GitHub + Cloudflare deployment handoff (v1.5)
+# MHAK FC — Cloudflare staging handoff
 
-## What is actually complete
-- A **staging-only**, framework-free static website for MHAK FC, which still truthfully describes an emerging club.
-- Cloudflare Pages Function at `functions/api/enquiry.js`, designed to fail closed when production variables are absent.
-- GitHub Actions **CI only** workflow at `.github/workflows/validate.yml` (tests, audits, builds and uploads a temporary review artifact; **never deploys**).
-- Node commands: `npm run check`, `npm run build:staging`, `npm run build:public`, `npm run build:enquiries`, `npm run verify:live`.
+## Current verified state (3 November 2026)
+- GitHub repository: https://github.com/Kallon-Tech-savvy/mhak-fc
+- Existing PR: https://github.com/Kallon-Tech-savvy/mhak-fc/pull/1
+- Source branch: `feat/digital-launch-v1-5`; base: `main`; PR remains **open and unmerged**.
+- GitHub Actions staging validation passed: https://github.com/Kallon-Tech-savvy/mhak-fc/actions/runs/41656458955
+- Website target: `mhak.alhajikallon.com`; mail target: `mhak@alhajikallon.com`. Neither is verified.
+- This repository does **not** deploy to Cloudflare automatically. No Cloudflare account actions have been performed.
 
-## GitHub repository
-The existing repository `Kallon-Tech-savvy/mhak-fc` was found to be **empty** on 2026-11-03. Import these files into that repository, keeping `public/`, `functions/`, `scripts/`, `tests/`, `.github/workflows/` and `package.json` at the root. **Do not import any real .env file, API keys, customer information or approved-private evidence.**
+## Safe staging deployment handoff
 
-Recommended first commands from your local computer after extracting this ZIP:
+**Important:** A Cloudflare Pages Git connection may immediately create publicly reachable `*.pages.dev` deployments. Staging `noindex` is not access control. Do not use preview URLs to share private material until Cloudflare Access restrictions are confirmed. This repository contains no live credentials, customer data, or approved private launch evidence.
 
-```bash
-npm run check
-# When ready to initialise the existing empty GitHub repository:
-git init
-git branch -M main
-git remote add origin https://github.com/Kallon-Tech-savvy/mhak-fc.git
-git add .
-git commit -m "chore(mhak): initialize safe staging site and CI gates"
-git push -u origin main
-```
+1. Open the [Cloudflare dashboard](https://dash.cloudflare.com/) → **Workers & Pages**. Check whether a Pages project for MHAK already exists before creating one; do not connect to an unrelated existing project.
+2. If creating a new Pages project, select **Connect to Git**, authenticate GitHub, and grant Cloudflare access only to `Kallon-Tech-savvy/mhak-fc` as appropriate.
+3. Use the **repository root**. Build command: `npm run build:staging`. Build output directory: `release/staging`. No framework preset is necessary. Node.js 22 is used in repository CI.
+4. Choose branch controls deliberately. `main` currently contains only a starter README, so a production build from `main` cannot run this project yet. Do **not** silently designate the PR branch as a public production site. Review the branch and initial-deployment settings before clicking Deploy. For a PR-based review, enable previews for `feat/digital-launch-v1-5`; do not merge PR #1 as part of initial preview setup.
+5. Immediately enable **Settings → General → Enable access policy** to protect Pages preview deployments. This **does not by itself protect the root `<project>.pages.dev` or a custom hostname**. If the production `*.pages.dev` hostname is reachable, follow Cloudflare's documented additional Access-app procedure. Verify access control in a signed-out browser before sharing links.
+6. Check that the deployed preview displays a staging banner; is `noindex`; has no sitemap; serves assets; and the adult enquiry form remains disabled. Inspect deployment status and the HTTP response headers.
+7. Check whether GitHub displays a Cloudflare Pages deployment check and preview URL on [PR #1](https://github.com/Kallon-Tech-savvy/mhak-fc/pull/1). Do not invent a `pages.dev` URL; use the one Cloudflare provides.
+8. Leave `mhak.alhajikallon.com` **unattached** until the public release's identity, content, DNS, privacy, safeguarding and mailbox checks have been approved. Leave Cloudflare email secrets, `ENQUIRIES_ENABLED` and form activation unset during staging.
 
-Before the first push, check `git status` and inspect the staged files. If the repository ceases to be empty, use a clone-and-merge workflow instead of blindly pushing.
+## Release commands and safeguards
+- `npm run check`: test, audit, build and verify safe staging.
+- `npm run build:staging`: generates `release/staging` with `noindex` and a disabled form.
+- `npm run build:public` and `npm run build:enquiries`: require real, private release evidence and an approved privacy notice. **Never fabricate these inputs or commit them.**
+- Cloudflare Pages Function: `functions/api/enquiry.js` stays at the repo root and is fail-closed without approved environment configuration.
+- Use Git integration or Wrangler for Pages Functions; dashboard drag-and-drop does not deploy the Functions directory.
 
-## Cloudflare Pages — don't accidentally publish
-- The CI workflow **does not deploy**. Connecting the GitHub repository to Cloudflare Pages separately may auto-deploy builds; leave public launch disabled until approval and configure Cloudflare Access for preview URLs.
-- If creating a new Pages project with Git integration, set build command to `npm run build:staging` and output directory `release/staging` for **protected staging only**. Use the project root as root directory, with `functions/` outside the output directory.
-- `mhak.alhajikallon.com` is the **planned** production custom domain. Attach it in Pages > Custom domains **only after** verifying the right Pages project. Never guess the `<project>.pages.dev` target.
-- When later using `npm run build:public`, provide private `launch-evidence.json` and a human-approved `approved-privacy.html` in the trusted build environment. Do **not** commit these to GitHub. The build rejects missing evidence.
-- To enable enquiries later, also pass the Turnstile public site key during build, configure the Pages environment secrets, deploy Pages Functions through Git integration or Wrangler, rate limit `/api/enquiry`, and run real send/receive/reply tests. A green CI run does not prove production mail works.
-- As documented by Cloudflare, the dashboard drag-and-drop uploader does not compile a `functions/` folder; use Git integration or Wrangler when the backend is needed.
+## Acceptance evidence to record (without secrets)
+- Actual Pages project name and deployment URL.
+- Deployed branch and commit SHA, successful build log.
+- Protected preview tested while signed out.
+- Browser and mobile checks (navigation, accessibility, assets, form disabled).
+- `robots.txt` and X-Robots-Tag verified from HTTP response.
+- Proof that production custom domain and contact form were not activated prematurely.
 
-## Domain and mailbox checks (still blocked)
-- Real DNS, TLS and page content checks: `npm run verify:live` from a networked environment.
-- Verify mail receipt at `mhak@alhajikallon.com` with a message from an external sender **and** an outbound reply. An MX record alone does not prove the inbox works.
-- Verify the production Turnstile hostname, action, token replay rejection, actual mail provider message ID and arrival at the mailbox.
+## References
+- https://developers.cloudflare.com/pages/configuration/git-integration/
+- https://developers.cloudflare.com/pages/configuration/preview-deployments/
+- https://developers.cloudflare.com/pages/platform/known-issues/
+- https://developers.cloudflare.com/pages/get-started/git-integration/
 
-**Do not label the club site live, public or available for enquiries until all relevant launch gates pass.**
+**Gate:** Protected staging deployment only. Public launch and live enquiries remain separate approvals.
