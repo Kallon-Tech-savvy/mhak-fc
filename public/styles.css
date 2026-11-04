@@ -35,3 +35,37 @@
 .privacy-page h2{font-size:1.25rem;margin:2rem 0 .7rem;}
 .privacy-page p{line-height:1.65;}
 .privacy-page small{font-size:.6em;}
+
+/* MVP 02 — clear user pathways and readable founding stories. */
+.pathways-section{border-top:1px solid var(--line)}
+.pathway-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:38px}
+.pathway-card{background:#fff;border:1px solid var(--line);border-top:4px solid var(--orange);padding:28px;min-width:0;display:flex;flex-direction:column}
+.pathway-label{color:#874018;font-size:11px;font-weight:800;letter-spacing:.08em;margin:0 0 18px}
+.pathway-card h3{font-size:25px;letter-spacing:-.035em;line-height:1.15;margin:0 0 16px}
+.pathway-card>p:not(.pathway-label){font-size:14px;line-height:1.65;color:#35485b}
+.pathway-link,.card-read{color:#85380f;font-weight:800;text-decoration:underline;text-underline-offset:4px}
+.pathway-link{display:inline-flex;gap:12px;margin-top:auto;padding-top:10px;font-size:14px}
+.pathway-card .pathway-note{margin:18px 0 0;border-top:1px solid var(--line);padding-top:15px;font-size:12px!important}
+.pathway-availability{margin-top:25px;padding:18px 20px;background:#e9eef2;border-left:4px solid var(--orange);line-height:1.6;font-weight:650;color:var(--blue)}
+.pathway-availability a{text-decoration:underline;text-underline-offset:3px}
+.card-read{display:inline-flex;margin:19px 23px 0;gap:10px;min-height:34px;align-items:center;font-size:14px}
+.story-card .card-pending{border-top:1px solid var(--line);margin:17px 23px 0;padding-top:15px;color:#445463;font-weight:650}
+.story-page .site-header .shell{min-height:75px}
+.article-top-nav{display:flex;gap:20px;align-items:center;flex-wrap:wrap;font-size:14px;font-weight:750}
+.article-top-nav a{padding-block:12px}
+.article-main{max-width:850px;width:min(calc(100% - 48px),850px);margin:0 auto;padding:70px 0 90px}
+.article-back{display:inline-flex;margin-bottom:36px;font-size:14px;font-weight:780;color:#7d310b;text-decoration:underline;text-underline-offset:4px}
+.article-eyebrow{color:#874018;font-size:11px;font-weight:850;letter-spacing:.14em;text-transform:uppercase;margin:0 0 20px}
+.article-main h1{font-size:clamp(42px,7vw,72px);line-height:1.05;letter-spacing:-.065em;color:var(--blue);margin:0 0 25px}
+.article-lead{font-size:clamp(18px,2.5vw,22px);line-height:1.65;color:#33495e;margin:0 0 30px}
+.article-status{border-left:4px solid var(--orange);background:#e8eef3;padding:16px 20px;font-size:14px;color:#1d344a;line-height:1.6;margin:0 0 50px}
+.article-body{max-width:72ch;color:#293b4c}
+.article-body h2{font-size:27px;letter-spacing:-.035em;margin:42px 0 10px;color:var(--blue)}
+.article-body p,.article-body li{font-size:17px;line-height:1.85}
+.article-body ul{padding-left:25px}
+.article-related{margin-top:60px;border-top:1px solid var(--line);padding-top:25px;display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between}
+.article-related a{font-weight:800;color:#82370f;text-decoration:underline;text-underline-offset:4px}
+.article-symbol{width:150px;height:150px;display:grid;place-items:center;background:var(--blue);margin:28px 0;border-radius:8px}
+.article-symbol img{width:96px;height:96px}
+@media(max-width:850px){.pathway-grid{grid-template-columns:1fr}.pathway-card{min-height:0}.article-top-nav{gap:12px}}
+@media(max-width:700px){.article-main{width:calc(100% - 36px);padding:50px 0 70px}.article-body p,.article-body li{font-size:16px}.article-top-nav{font-size:12px}.article-status{padding:14px}}
