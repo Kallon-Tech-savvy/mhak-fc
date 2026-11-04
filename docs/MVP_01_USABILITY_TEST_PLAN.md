@@ -85,3 +85,30 @@ Produce one page:
 4. **Owner** and next test.
 
 **Exit criterion:** MHAK's core first-time discovery journey can be completed truthfully and without a dead end in the offline prototype. External reach, demand and live contact are separate validations.
+
+## Additional check — cognitive ease and visual priority (MVP 03)
+
+This is a test protocol, **not** evidence of successful user testing. The goal is to see whether visitors can find what matters without extra explanation, not to minimise clicks at the expense of clarity or safety.
+
+**Five-second first impression:** Show the first viewport on a mobile phone for five seconds. Hide the screen and ask:
+1. What is MHAK?
+2. Is the club already running trials, or still being built?
+3. What would you tap first to learn more?
+
+**Unaided first-click tasks:**
+- Find the current stage of the club without a prompt to scroll to a particular section.
+- Find the complete story behind the club's formation.
+- As an aspiring player, locate the next honest step without assuming a trial application is open.
+- Find additional detail about confirmed versus planned club capabilities if interested.
+
+**Observe:** first tap/scroll direction, hesitations, backtracks, whether the primary orange action was noticed, whether information in the collapsed status is actually needed to answer the main question, and whether the role cards look like open applications.
+
+**Design hypotheses to validate (not yet established facts):**
+- A single visually primary hero action will reduce decision conflict.
+- A one-paragraph status summary with optional detail will preserve trust while reducing the effort of scanning four status cards.
+- Two complete linked founding notes will be clearer than three equally prominent cards when the third has no documented milestone.
+- Hiding an unavailable form will avoid inviting wasted effort.
+
+**Suggested pass criteria:** In a small qualitative round, no participant should interpret the site as offering active trials or guaranteed places; every participant should locate the founding story and identify the next honest action without moderator intervention. Treat confusion as a design problem; do not report small-sample results as statistically representative.
+
+**Manual device checks:** 320 px and 390 px viewport width, long text zoom at 200%, keyboard-only operation, visible focus, native disclosure open/close, touch target usability, no clipped CTA text, no horizontal overflow, and useful page structure when CSS is unavailable. These checks have **not yet been reported as passed**.
