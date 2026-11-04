@@ -26,7 +26,7 @@ test('one visually primary hero CTA and optional detailed club status',()=>{
  assert.ok(hero,'hero section must exist');
  assert.equal((hero.match(/class="button button-orange"/g)||[]).length,1,'one prominent hero CTA');
  assert.ok(!hero.includes('button button-outline'),'secondary link should not look like equal primary button');
- assert.match(hero,/href="#status">Explore MHAK/);
+ assert.match(hero,/href="#status">See where we stand/);
  assert.match(hero,/class="hero-secondary-link"/);
  const status=home.split('<section id="status"')[1]?.split('</section>')[0];
  assert.ok(status);
