@@ -49,7 +49,8 @@
     try {
       window.turnstile.render('#turnstile-slot', {sitekey:config.turnstileSiteKey,action:'mhak_enquiry'});
       fields.disabled = false;
-      availability.textContent = 'Enquiries are open for adults. This is not a player registration or a promise of trials. Please share only what is needed for an initial conversation.';
+      form.hidden = false;
+      availability.textContent = 'Adult enquiries are open. This is not a player registration or a promise of trials. Please share only what is needed for an initial conversation.';
     } catch { /* keep disabled */ }
   };
   document.head.append(script);
@@ -57,6 +58,7 @@
     event.preventDefault();
     if (fields.disabled) return;
     feedback.textContent = '';
+    feedback.classList.remove('form-error');
     if (!form.reportValidity()) return;
     const token = window.turnstile?.getResponse?.();
     if (!token) { feedback.textContent = 'Complete the security check before sending.'; return; }
