@@ -99,39 +99,64 @@
       </div>
     </section>
     <section id="pathways" class="section shell pathways-section" aria-labelledby="pathways-heading">
-      <div class="section-head"><p class="section-index">05 / YOUR NEXT STEP</p><h2 id="pathways-heading">There are different ways to follow the beginning.</h2><p>Choose the path that fits you. These are information pathways, not open applications or confirmed vacancies.</p></div>
+      <div class="section-head"><p class="section-index">05 / FIND YOUR PATH</p><h2 id="pathways-heading">What brings you to MHAK?</h2><p>Start with the information most relevant to you. We are not taking applications yet.</p></div>
       <div class="pathway-grid">
-        <article class="pathway-card"><p class="pathway-label">01 / ASPIRING FOOTBALLERS</p><h3>Interested in playing?</h3><p>Learn what MHAK hopes to build and what has not yet been organised. There are no announced trials, squad places or registration applications.</p><a href="#status" class="pathway-link">Check the club status <span aria-hidden="true">↗</span></a><p class="pathway-note">If you're under 18, ask a responsible adult to make any future contact. Don't share your details through this preview.</p></article>
-        <article class="pathway-card"><p class="pathway-label">02 / COACHES & VOLUNTEERS</p><h3>Interested in helping build?</h3><p>The club is exploring coaching and training standards. No coaching appointment, role description or recruitment process has been confirmed.</p><a href="stories/why-mhak.html" class="pathway-link">Read the founding purpose <span aria-hidden="true">↗</span></a><p class="pathway-note">No coaching role or volunteer placement is being offered by this prototype.</p></article>
-        <article class="pathway-card"><p class="pathway-label">03 / COMMUNITY & PARTNERS</p><h3>Interested in the wider mission?</h3><p>Explore the club's commitments and documented steps before considering any partnership or support.</p><a href="#journal" class="pathway-link">Read the founding notes <span aria-hidden="true">↗</span></a><p class="pathway-note">The club has not announced a formal partnership programme.</p></article>
+        <article class="pathway-card pathway-card-primary">
+          <p class="pathway-label">01 / ASPIRING FOOTBALLERS</p>
+          <h3>Interested in playing?</h3>
+          <p>There's no trial or player registration open yet. Discover the kind of club we're working to build.</p>
+          <a href="stories/why-mhak.html" class="pathway-link">Discover the vision <span aria-hidden="true">↗</span></a>
+          <p class="pathway-note">Under 18? Ask a responsible adult about any future contact. Please don't share personal information here.</p>
+        </article>
+        <article class="pathway-card">
+          <p class="pathway-label">02 / COACHES & VOLUNTEERS</p>
+          <h3>Want to help shape it?</h3>
+          <p>No roles have been announced. Learn about the standards we're defining.</p>
+          <a href="#principles" class="pathway-link">Explore the principles <span aria-hidden="true">↗</span></a>
+        </article>
+        <article class="pathway-card">
+          <p class="pathway-label">03 / COMMUNITY & PARTNERS</p>
+          <h3>Interested in the mission?</h3>
+          <p>See the founding decisions and current position before exploring potential collaboration.</p>
+          <a href="#journal" class="pathway-link">Read the founding notes <span aria-hidden="true">↗</span></a>
+        </article>
       </div>
-      <p class="pathway-availability">Contact status: The online form is not open. <a href="#participate">See the contact availability notice</a>. No personal information is collected by this preview.</p>
     </section>
-    <section id="participate" class="participate"><div class="shell participate-grid"><div><p class="section-index section-index-light">06 / BE PART OF THE BEGINNING</p><h2>Keep up with the journey.<br>Contact when ready.</h2><p>MHAK is at an early stage. We hope to connect with aspiring footballers, coaches and community partners. The planned club inbox is mhak@alhajikallon.com. The enquiry form will open only after inbox delivery, safeguarding procedures and secure processing are verified.</p></div><div class="interest-card" id="enquiry-card">
-        <p class="form-eyebrow">OFFICIAL ENQUIRIES · PROPOSED CONTACT: mhak@alhajikallon.com</p>
-        <h3>Preview the future enquiry journey.</h3>
-        <p id="enquiry-availability" class="form-availability" role="status">Enquiries are not open yet. This is a preview of the future contact experience. Do not enter personal information.</p>
-        <form id="enquiry-form" class="enquiry-form" action="#participate" method="post" novalidate>
-          <fieldset id="enquiry-fields" disabled>
-            <legend class="sr-only">Enquiry details</legend>
-            <label for="enquiry-role">I'm contacting about</label>
-            <select id="enquiry-role" name="role" required>
-              <option value="">Choose one</option><option value="player">Playing opportunities</option><option value="coach">Coaching and volunteering</option><option value="partner">Community and partnerships</option><option value="general">General enquiry</option>
-            </select>
-            <div class="form-row"><div><label for="enquiry-name">Your name</label><input id="enquiry-name" name="name" type="text" autocomplete="name" minlength="2" maxlength="70" required placeholder="Full name"></div>
-            <div><label for="enquiry-email">Email for a reply</label><input id="enquiry-email" name="email" type="email" autocomplete="email" maxlength="254" required placeholder="you@example.com"></div></div>
-            <label for="enquiry-message">Your message</label>
-            <textarea id="enquiry-message" name="message" rows="5" minlength="20" maxlength="1200" required placeholder="Tell us what you're interested in and why. Please do not include medical details, identification numbers or information about children."></textarea>
-            <div class="honeypot" aria-hidden="true"><label for="enquiry-website">Website (leave empty)</label><input id="enquiry-website" name="website" type="text" tabindex="-1" autocomplete="off"></div>
-            <label class="checkline"><input id="enquiry-adult" type="checkbox" name="adult" required><span>I'm 18 or older and I'm contacting MHAK on my own behalf or as a responsible adult. I'll avoid sharing sensitive information about children.</span></label>
-            <label class="checkline"><input id="enquiry-consent" type="checkbox" name="consent" required><span>I have read the <a href="privacy.html">privacy notice</a> and agree that MHAK may use this information to review and respond to my enquiry. This is not a player registration or trial application.</span></label>
-            <div id="turnstile-slot" class="turnstile-slot"></div>
-            <button id="enquiry-submit" type="submit" class="button button-orange form-submit">Send enquiry <span aria-hidden="true">↗</span></button>
-          </fieldset>
-          <p id="enquiry-response" class="form-feedback" role="status" aria-live="polite"></p>
-        </form>
-        <p class="disclaimer">The planned official contact is mhak@alhajikallon.com. Inbox delivery, a published and approved privacy/retention notice and bot protection are required before this form can open. No messages are collected by this preview. If you are under 18, ask a responsible adult to make the initial enquiry without sharing your personal details.</p>
-      </div></div></section>
+    <section id="participate" class="participate" aria-labelledby="participate-heading">
+      <div class="shell participate-grid">
+        <div>
+          <p class="section-index section-index-light">06 / STAY INFORMED</p>
+          <h2 id="participate-heading">Follow the beginning.</h2>
+          <p>We're documenting the club's decisions as they happen. You can read the notes today; direct enquiries will come later, once we're ready to receive them responsibly.</p>
+          <a class="participate-story-link" href="#journal">Explore the founding notes <span aria-hidden="true">↗</span></a>
+        </div>
+        <div class="interest-card" id="enquiry-card">
+          <p class="form-eyebrow">CONTACT AVAILABILITY</p>
+          <h3>Enquiries aren't open yet.</h3>
+          <p id="enquiry-availability" class="form-availability" role="status">There's no player registration or trial application available. Check the founding notes for updates.</p>
+          <form id="enquiry-form" class="enquiry-form" action="#participate" method="post" novalidate hidden>
+            <fieldset id="enquiry-fields" disabled>
+              <legend class="sr-only">Enquiry details</legend>
+              <label for="enquiry-role">I'm contacting about</label>
+              <select id="enquiry-role" name="role" required>
+                <option value="">Choose one</option><option value="player">Playing opportunities</option><option value="coach">Coaching and volunteering</option><option value="partner">Community and partnerships</option><option value="general">General enquiry</option>
+              </select>
+              <div class="form-row"><div><label for="enquiry-name">Your name</label><input id="enquiry-name" name="name" type="text" autocomplete="name" minlength="2" maxlength="70" required placeholder="Full name"></div>
+              <div><label for="enquiry-email">Email for a reply</label><input id="enquiry-email" name="email" type="email" autocomplete="email" maxlength="254" required placeholder="you@example.com"></div></div>
+              <label for="enquiry-message">Your message</label>
+              <textarea id="enquiry-message" name="message" rows="5" minlength="20" maxlength="1200" required placeholder="Tell us what you're interested in and why. Please do not include medical details, identification numbers or information about children."></textarea>
+              <div class="honeypot" aria-hidden="true"><label for="enquiry-website">Website (leave empty)</label><input id="enquiry-website" name="website" type="text" tabindex="-1" autocomplete="off"></div>
+              <label class="checkline"><input id="enquiry-adult" type="checkbox" name="adult" required><span>I'm 18 or older and I'm contacting MHAK on my own behalf or as a responsible adult. I'll avoid sharing sensitive information about children.</span></label>
+              <label class="checkline"><input id="enquiry-consent" type="checkbox" name="consent" required><span>I have read the <a href="privacy.html">privacy notice</a> and agree that MHAK may use this information to review and respond to my enquiry. This is not a player registration or trial application.</span></label>
+              <div id="turnstile-slot" class="turnstile-slot"></div>
+              <button id="enquiry-submit" type="submit" class="button button-orange form-submit">Send enquiry <span aria-hidden="true">↗</span></button>
+            </fieldset>
+            <p id="enquiry-response" class="form-feedback" role="status" aria-live="polite"></p>
+          </form>
+          <p class="disclaimer">Planned club address: mhak@alhajikallon.com (not yet verified). If you're under 18, a responsible adult can enquire when contact opens. Don't share personal information through this preview.</p>
+        </div>
+      </div>
+    </section>
   </main>
   <footer class="site-footer"><div class="shell footer-inner"><div class="footer-brand"><img src="assets/mhak-mark-white.svg" alt="" width="38" height="38"><strong>MHAK FC</strong></div><p>A club in the making. Sierra Leone.</p><a href="privacy.html">Privacy notice (draft)</a><a href="#top">Back to top ↑</a></div><div class="shell footer-bottom">DESIGN STAGING PREVIEW · DO NOT PUBLISH WITHOUT THE LAUNCH CHECKLIST</div></footer>
   <script src="script.js" defer></script>
