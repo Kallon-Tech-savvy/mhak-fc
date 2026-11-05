@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; connect-src 'none'; form-action 'none'; base-uri 'none'">
+  <title>MHAK FC — Offline first-click usability lab</title>
+  <style>
+    :root{--navy:#17283c;--orange:#b84e1b;--white:#f7f9fb;--ink:#101820;--muted:#4a5c6d;--line:#cbd5df;--focus:#c65b24;--soft:#eaf0f5;--max:1050px}
+    *,*::before,*::after{box-sizing:border-box}
+    body{margin:0;font:16px/1.55 system-ui,-apple-system,Segoe UI,Arial,sans-serif;color:var(--ink);background:var(--white)}
+    a{color:#79300d;text-underline-offset:4px}a:hover{text-decoration-thickness:2px}
+    button,input,select,textarea{font:inherit}
+    :is(button,input,select,textarea,a):focus-visible{outline:3px solid var(--focus);outline-offset:3px}
+    .shell{width:min(var(--max),calc(100% - 36px));margin:auto}
+    header{background:var(--navy);color:white;padding:24px 0}
+    header .top{display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+    header .mark{display:flex;align-items:center;gap:12px;font-size:20px;font-weight:900;letter-spacing:-.035em}
+    header .mark b{background:var(--orange);color:white;display:grid;place-items:center;border-radius:5px;width:42px;height:42px}
+    header .tag{border:1px solid #a3b3c6;color:#e3ecf5;padding:5px 11px;border-radius:100px;font-size:12px;font-weight:750}
+    header p{max-width:62ch;color:#d0dae5;margin:17px 0 0;font-size:14px}
+    h1{font-size:clamp(30px,4vw,43px);line-height:1.14;letter-spacing:-.04em;margin:24px 0 11px}
+    h2{font-size:24px;line-height:1.23;letter-spacing:-.025em;margin:0 0 9px}
+    h3{font-size:18px;line-height:1.25;margin:0 0 8px}
+    .intro{padding:17px 0 21px}
+    .intro>p{max-width:68ch;color:var(--muted)}
+    .notice{border-left:4px solid var(--orange);background:var(--soft);padding:13px 17px;font-size:14px;margin:20px 0;color:var(--navy)}
+    .scope{font-size:12px;font-weight:800;letter-spacing:.1em;color:#8e4018;margin:0 0 12px}
+    .layout{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:22px;align-items:start}
+    .pane{border:1px solid var(--line);background:white;border-radius:8px;min-width:0;padding:25px}
+    .identity{display:grid;grid-template-columns:minmax(0,.4fr) minmax(0,.6fr);gap:13px}
+    label{font-weight:740;font-size:13px;display:block;margin-bottom:7px}
+    input,select,textarea{width:100%;max-width:100%;border:1px solid #758696;border-radius:5px;min-height:44px;padding:10px 11px;background:white;color:var(--ink)}
+    textarea{min-height:104px;resize:vertical;line-height:1.5}
+    .small{font-size:12px;color:var(--muted)}
+    .meta{border-top:1px solid var(--line);margin-top:21px;padding-top:20px}
+    .task-count{font-size:12px;font-weight:850;color:#864015;letter-spacing:.08em;margin:0 0 14px}
+    .prompt{font-size:clamp(19px,2.5vw,25px);font-weight:760;line-height:1.4;color:var(--navy);margin:15px 0 17px}
+    .instruction{background:var(--soft);color:var(--navy);font-size:14px;padding:14px;border-radius:5px;margin:16px 0}
+    .subtle{color:var(--muted);font-size:14px}
+    .task-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:25px}
+    button{cursor:pointer;border-radius:5px;min-height:44px;padding:10px 17px;font-weight:800;border:1px solid var(--navy);color:var(--navy);background:transparent}
+    button.primary{background:var(--orange);border-color:var(--orange);color:white}
+    button.secondary{background:var(--navy);border-color:var(--navy);color:white}
+    button:disabled{opacity:.42;cursor:not-allowed}
+    button:hover:not(:disabled){filter:brightness(.95)}
+    .question{margin-top:18px}
+    .question select{margin-top:0}
+    .result{margin-top:22px;border-top:1px solid var(--line);padding-top:20px}
+    .result strong{font-size:24px;color:var(--navy)}
+    .records{display:flex;gap:16px;flex-wrap:wrap;margin:10px 0 15px}
+    .records span{font-size:13px;color:var(--muted)}
+    .record-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:15px}
+    .record-actions button{font-size:13px}
+    .footer{padding:38px 0 50px;font-size:13px;color:var(--muted)}
+    .status-msg{font-size:13px;font-weight:650;color:#65300e;min-height:22px;margin-top:12px}
+    [hidden]{display:none!important}
+    @media(max-width:780px){.layout{grid-template-columns:1fr}.pane{padding:21px}.shell{width:min(100% - 28px,var(--max))}}
+    @media(max-width:380px){.identity{grid-template-columns:1fr}.pane{padding:17px}.task-actions button{flex:1}.prompt{font-size:20px}}
+    @media print{header{color:black;background:white;border-bottom:1px solid #aaa}.tag,.task-actions,.record-actions{display:none!important}.layout{display:block}.pane{page-break-inside:avoid;margin-bottom:12px}.footer{display:none}}
+  </style>
+</head>
+<body>
+<header>
+  <div class="shell top"><div class="mark"><b aria-hidden="true">M</b><span>MHAK FC <span style="font-weight:500">/ Usability lab</span></span></div><span class="tag">PRIVATE · OFFLINE · RESEARCH ONLY</span></div>
+  <p class="shell">A lightweight facilitator workspace. No accounts, no analytics, no automatic storage and no network requests. This is not the public club website.</p>
+</header>
+<main class="shell" id="main">
+  <section class="intro" aria-labelledby="page-heading">
+    <h1 id="page-heading">Discover where visitors struggle.</h1>
+    <p>Give adult participants the MHAK MVP on a separate phone or browser tab. Read each task neutrally, watch what they do, and record only anonymous observations—not names, contact details or sensitive information.</p>
+    <div class="notice"><strong>Research integrity:</strong> Do not tell participants that there are no trials before the task. Ask what they understood, then note misconceptions. Obtain permission to observe. The data below stays in this browser's memory until you export it; closing or refreshing clears it.</div>
+  </section>
+  <section class="layout" aria-label="Facilitator session">
+    <div class="pane" aria-labelledby="task-heading">
+      <p class="scope">SESSION</p>
+      <div class="identity">
+        <div><label for="participant">Anonymous ID</label><input id="participant" maxlength="12" inputmode="text" autocomplete="off" value="P01" aria-describedby="participant-hint"></div>
+        <div><label for="audience">Participant perspective</label><select id="audience"><option value="player">Aspiring footballer</option><option value="coach">Coach / volunteer</option><option value="partner">Partner / supporter</option><option value="other">Other adult visitor</option></select></div>
+      </div>
+      <p class="small" id="participant-hint">Use a code such as P01. Never record a name, email, age or phone number.</p>
+      <div class="meta">
+        <p class="task-count" id="task-count" aria-live="polite">TASK 1 OF 5</p>
+        <h2 id="task-heading">First impression</h2>
+        <p class="prompt" id="task-prompt">Look at the homepage for about five seconds. What do you think MHAK is, and what caught your attention first?</p>
+        <div class="instruction"><strong>Facilitator cue:</strong> <span id="task-cue">Show the homepage briefly, then hide it before asking. Do not explain the brand or status.</span></div>
+        <p class="subtle" id="task-evidence">Listen for whether they recognise a football club in development, without prompting.</p>
+        <div class="task-actions"><button type="button" id="previous" disabled>Previous</button><button type="button" class="secondary" id="next">Next task</button></div>
+      </div>
+    </div>
+    <div class="pane" aria-labelledby="observation-heading">
+      <p class="scope">OBSERVATION SHEET</p>
+      <h2 id="observation-heading">What actually happened?</h2>
+      <p class="subtle">Write behaviour or exact wording before interpreting it. A blocked journey is more important than a favourable opinion.</p>
+      <div class="question"><label for="completion">Task outcome</label><select id="completion"><option value="not-tested">Not tested</option><option value="independent">Completed independently</option><option value="assisted">Completed after assistance</option><option value="blocked">Could not complete</option></select></div>
+      <div class="question"><label for="confusion">Did they believe MHAK already offers trials or squad places?</label><select id="confusion"><option value="unknown">Not assessed</option><option value="no">No</option><option value="yes">Yes — mistaken assumption</option></select></div>
+      <div class="question"><label for="severity">Issue severity</label><select id="severity"><option value="none">No issue observed</option><option value="minor">Minor friction</option><option value="major">Major confusion</option><option value="blocking">Blocking / misleading</option></select></div>
+      <div class="question"><label for="evidence">Anonymous behaviour or quote (optional)</label><textarea id="evidence" maxlength="500" autocomplete="off" placeholder="Example: 'Tapped Get involved, then went back to the hero.' No identifying details."></textarea></div>
+      <p class="small">No automatic timestamps, recordings or identifiers are collected. The observer decides what to write.</p>
+      <div class="result">
+        <h3>Saved observations</h3>
+        <div class="records"><div><strong id="sessions-count">0</strong> <span>adult sessions</span></div><div><strong id="blocking-count">0</strong> <span>blocking or major findings</span></div></div>
+        <button type="button" class="primary" id="save">Save this participant</button>
+        <div class="record-actions"><button id="export-json" type="button">Export JSON</button><button id="export-csv" type="button">Export CSV</button><button id="new-session" type="button">Next participant</button></div>
+        <p class="status-msg" id="save-status" role="status" aria-live="polite"></p>
+      </div>
+    </div>
+  </section>
+  <p class="footer">Suggested pilot: 5–8 adults with varied football interests. Use the findings to fix observed problems, not to claim market demand or statistical certainty. Stop and correct any interface that appears to accept minors' personal information or promise non-existent trials.</p>
+</main>
+<script>
+(() => {
+  'use strict';
+  const tasks = [
+    {title:'First impression',prompt:'Look at the homepage for about five seconds. What do you think MHAK is, and what caught your attention first?',cue:'Show the homepage briefly, then hide it before asking. Do not explain the brand or status.',evidence:'Listen for whether they recognise a football club in development, without prompting.'},
+    {title:'Find the current position',prompt:'Take a look around. Show me where you would check what this club has already established.',cue:'Do not point to the status section or read any labels out loud.',evidence:'Watch the first tap, hesitation and whether they distinguish confirmed work from plans.'},
+    {title:'Find the founding story',prompt:'Find out why someone started building this club. Show me where you would read more.',cue:'Let them navigate and scroll naturally. Avoid saying “founding note”.',evidence:'Can they open the full article and return without getting lost?'},
+    {title:'Consider playing',prompt:'Imagine you are interested in playing for MHAK. What would you try to do next?',cue:'Do not suggest that recruitment or trials are open or closed.',evidence:'Watch for imagined trials, applications and dead ends. Note exact wording.'},
+    {title:'Make an informed decision',prompt:'What would you need to know before trusting or recommending this club? Can you find any of that information here?',cue:'Give them time to explain their reasoning without correcting it.',evidence:'Note credibility signals, gaps and whether the club’s present stage is understood.'}
+  ];
+  const fields = ['completion','confusion','severity','evidence'];
+  const $ = id => document.getElementById(id);
+  const empty = () => tasks.map(() => ({completion:'not-tested',confusion:'unknown',severity:'none',evidence:''}));
+  let current = 0;
+  let draft = empty();
+  const saved = [];
+  const safeId = text => String(text || '').trim().replace(/[^A-Za-z0-9_-]/g,'').slice(0,12);
+  function persistTask() { fields.forEach(id => draft[current][id] = $(id).value); }
+  function render() {
+    const task=tasks[current];
+    $('task-count').textContent = 'TASK '+(current+1)+' OF '+tasks.length;
+    $('task-heading').textContent=task.title;
+    $('task-prompt').textContent=task.prompt;
+    $('task-cue').textContent=task.cue;
+    $('task-evidence').textContent=task.evidence;
+    fields.forEach(id => $(id).value=draft[current][id]);
+    $('previous').disabled=current===0;
+    $('next').disabled=current===tasks.length-1;
+    $('next').textContent=current===tasks.length-1?'Last task':'Next task';
+  }
+  function counts() {
+    $('sessions-count').textContent=String(saved.length);
+    $('blocking-count').textContent=String(saved.flatMap(x=>x.tasks).filter(x=>x.severity==='major'||x.severity==='blocking').length);
+  }
+  function alertStatus(message) {$('save-status').textContent=message;}
+  $('previous').addEventListener('click',()=>{persistTask();if(current>0){current--;render();}});
+  $('next').addEventListener('click',()=>{persistTask();if(current<tasks.length-1){current++;render();}});
+  function record() {
+    persistTask();
+    const id=safeId($('participant').value);
+    if(!id){alertStatus('Add an anonymous participant code, such as P01.');$('participant').focus();return;}
+    if(saved.some(x=>x.participant===id)){alertStatus('That anonymous code is already saved. Use Next participant for a new session.');return;}
+    saved.push({participant:id,audience:$('audience').value,tasks:draft.map((r,i)=>({task:i+1,title:tasks[i].title,...r}))});
+    counts();alertStatus('Saved '+id+' in memory. Export your notes before closing this page.');
+  }
+  $('save').addEventListener('click',record);
+  $('new-session').addEventListener('click',()=>{
+    const currentId=safeId($('participant').value);
+    if(!saved.some(x=>x.participant===currentId)) {alertStatus('Save or export the current participant before starting another.');return;}
+    const nextNum=saved.length+1;
+    $('participant').value='P'+String(nextNum).padStart(2,'0');
+    $('audience').value='player';current=0;draft=empty();render();alertStatus('Ready for the next adult participant.');
+  });
+  function download(name,mime,content) {
+    const file=new Blob([content],{type:mime});const url=URL.createObjectURL(file);
+    const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),1500);
+  }
+  $('export-json').addEventListener('click',()=>{
+    if(!saved.length){alertStatus('No saved sessions yet.');return;}
+    download('mhak-anonymous-usability.json','application/json',JSON.stringify({study:'MHAK FC offline first-click pilot',schemaVersion:1,notes:'Anonymous observations; qualitative sample only',sessions:saved},null,2));
+    alertStatus('JSON export created locally.');
+  });
+  $('export-csv').addEventListener('click',()=>{
+    if(!saved.length){alertStatus('No saved sessions yet.');return;}
+    const cols=['participant','audience','task','task_title','completion','confusion','severity','evidence'];
+    const escapeCell=x=>{
+      const value=String(x ?? '').replace(/\r?\n/g,' ').trim();
+      // Prefix spreadsheet formula starters after optional whitespace to avoid CSV formula injection.
+      const safe=/^[=+@\-\t\r]/.test(value)?'\''+value:value;
+      return '"'+safe.replace(/"/g,'""')+'"';
+    };
+    const rows=saved.flatMap(session=>session.tasks.map(t=>[session.participant,session.audience,t.task,t.title,t.completion,t.confusion,t.severity,t.evidence]));
+    download('mhak-anonymous-usability.csv','text/csv;charset=utf-8',[cols.map(escapeCell).join(','),...rows.map(r=>r.map(escapeCell).join(','))].join('\r\n'));
+    alertStatus('CSV export created locally.');
+  });
+  render();counts();
+})();
+</script>
+</body>
+</html>
