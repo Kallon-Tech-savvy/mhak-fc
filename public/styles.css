@@ -222,3 +222,6 @@
   .pathway-card{padding:17px}
   .status-next{white-space:normal}
 }
+
+/* Long contact addresses must wrap under narrow reflow. */
+.privacy-page{overflow-wrap:anywhere}
