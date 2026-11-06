@@ -7,3 +7,9 @@ launch-evidence.json
 approved-privacy.html
 *.log
 .DS_Store
+
+# Private usability research (local-only, do not commit participant exports)
+qa/results/
+qa/exports/
+research-exports/
+research-reports/
