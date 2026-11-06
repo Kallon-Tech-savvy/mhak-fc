@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; connect-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'">
+  <title>MHAK FC — Offline findings review</title>
+  <style>
+    :root{--navy:#17283c;--ink:#101820;--orange:#b84e1b;--bg:#f7f9fb;--muted:#475868;--line:#ced8e2;--soft:#edf2f6;--max:1010px}
+    *,*::before,*::after{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,Segoe UI,Arial,sans-serif}
+    .shell{width:min(var(--max),calc(100% - 36px));margin-inline:auto}
+    .top{background:var(--navy);color:white;padding:20px 0}
+    .brand{font-weight:850;letter-spacing:-.02em;display:flex;align-items:center;gap:10px}
+    .brand-icon{width:36px;height:36px;background:var(--orange);display:grid;place-items:center;border-radius:4px}
+    .top p{font-size:13px;color:#d7e3ef;margin:9px 0 0;max-width:66ch}
+    main{padding:34px 0 55px}
+    h1{font-size:clamp(30px,4.8vw,46px);letter-spacing:-.055em;line-height:1.1;margin:0 0 13px;max-width:19ch}
+    h2{font-size:24px;letter-spacing:-.035em;line-height:1.2;margin:0 0 12px}
+    h3{font-size:19px;letter-spacing:-.025em;line-height:1.25;margin:0 0 8px}
+    .lead{max-width:65ch;color:var(--muted);font-size:16px;margin:0 0 22px}
+    .eyebrow{font-size:11px;font-weight:850;color:#8a411b;letter-spacing:.12em;margin:0 0 11px}
+    .surface{background:white;border:1px solid var(--line);border-radius:7px;padding:25px;margin:22px 0}
+    .notice{padding:14px 17px;background:var(--soft);border-left:4px solid var(--orange);font-size:14px;color:var(--navy);margin:20px 0}
+    label{font-size:14px;font-weight:800;display:block;margin-bottom:9px}
+    input[type=file]{width:100%;min-height:48px;border:1px dashed #8795a3;background:#f8fafc;border-radius:5px;padding:11px;font:inherit;font-size:14px}
+    input:focus-visible,button:focus-visible,a:focus-visible{outline:3px solid #d66b35;outline-offset:3px}
+    button{font:inherit;cursor:pointer;background:var(--navy);color:white;border:0;border-radius:5px;min-height:44px;padding:10px 17px;font-weight:800}
+    button:hover:not(:disabled){filter:brightness(1.1)}
+    button:disabled{opacity:.55;cursor:not-allowed}
+    button.secondary{background:white;border:1px solid var(--navy);color:var(--navy)}
+    .actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:17px}
+    .status{margin:12px 0 0;min-height:1.5em;font-size:14px;font-weight:750;color:#7d3417}
+    .results{display:none}
+    .results.ready{display:block}
+    .stat-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:20px 0 27px}
+    .stat{padding:21px;background:white;border:1px solid var(--line);border-radius:5px}
+    .stat strong{display:block;font-size:36px;font-weight:850;line-height:1.15;color:var(--navy);letter-spacing:-.045em}
+    .stat span{font-size:13px;color:var(--muted);line-height:1.35;display:block;margin-top:7px}
+    .section-intro{margin:32px 0 16px}
+    .task-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+    .task-card{background:white;padding:22px;border:1px solid var(--line);border-top:3px solid var(--navy);border-radius:5px;min-width:0}
+    .task-card.has-risk{border-top-color:var(--orange)}
+    .task-num{font-size:11px;letter-spacing:.12em;font-weight:800;color:#87401c;margin:0 0 10px}
+    .task-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 15px;margin:15px 0 0}
+    .task-facts div{border-top:1px solid var(--line);padding-top:10px}
+    .task-facts dt{font-size:12px;color:var(--muted)}
+    .task-facts dd{font-size:21px;font-weight:850;margin:1px 0 0;color:var(--navy)}
+    .triage-list{display:grid;gap:13px}
+    .triage-item{background:white;border:1px solid var(--line);border-left:4px solid var(--orange);padding:20px;border-radius:4px}
+    .triage-item p{font-size:14px;margin:6px 0;color:var(--muted)}
+    .triage-item strong{color:#7e3210}
+    .triage-item .codes{overflow-wrap:anywhere}
+    .footer-note{font-size:13px;color:var(--muted);padding:23px 0}
+    [hidden]{display:none!important}
+    @media(max-width:700px){.shell{width:calc(100% - 28px)}.surface{padding:18px}.task-grid{grid-template-columns:1fr}.stat-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.stat{padding:15px}.stat strong{font-size:29px}}
+    @media(max-width:380px){.stat-grid{grid-template-columns:1fr;gap:8px}.stat{display:flex;align-items:center;gap:16px;padding:12px 15px}.stat span{margin:0}.actions button{width:100%}}
+    @media print{.top{background:white;color:black}.top p{color:black}.surface:first-of-type,.actions{display:none!important}.results{display:block}.task-card,.triage-item{break-inside:avoid}}
+  </style>
+</head>
+<body>
+<header class="top"><div class="shell"><div class="brand"><span class="brand-icon" aria-hidden="true">M</span><span>MHAK FC / Research review</span></div><p>Private, offline decision support. No accounts, no tracking and no network requests.</p></div></header>
+<main class="shell">
+  <p class="eyebrow">MVP 06 / OBSERVE → INTERPRET → DECIDE</p>
+  <h1>Turn observations into better decisions.</h1>
+  <p class="lead">Import the anonymous JSON files exported by the MHAK usability lab. See which tasks were difficult, where mistaken assumptions occurred, and what deserves attention first.</p>
+  <div class="surface" aria-labelledby="import-heading">
+    <h2 id="import-heading">Review your pilot findings</h2>
+    <p class="lead">Choose one or more <strong>JSON</strong> exports from the offline usability lab. You can combine sessions from different facilitators if participant codes are unique.</p>
+    <label for="input-files">Select anonymous study exports</label>
+    <input type="file" id="input-files" accept=".json,application/json" multiple>
+    <div class="actions"><button type="button" id="analyse">Review findings</button><button type="button" class="secondary" id="clear">Clear everything</button></div>
+    <p class="status" id="status" role="status" aria-live="polite">No study data loaded.</p>
+    <div class="notice"><strong>Privacy:</strong> Files are read only in this browser and are never uploaded. Raw quotes are excluded from the report. No data is stored automatically; refreshing clears it.</div>
+  </div>
+  <section class="results" id="results" aria-labelledby="results-title">
+    <div class="section-intro"><p class="eyebrow">EVIDENCE SUMMARY</p><h2 id="results-title">What the sessions show</h2></div>
+    <div class="stat-grid">
+      <div class="stat"><strong id="sessions">0</strong><span>Anonymous sessions</span></div>
+      <div class="stat"><strong id="assessed">0</strong><span>Tasks actually assessed</span></div>
+      <div class="stat"><strong id="flags">0</strong><span>Major, blocking or mistaken-trial observations</span></div>
+    </div>
+    <div class="notice" id="gate">No findings assessed.</div>
+    <div class="section-intro"><h2>Task-by-task picture</h2><p class="lead">Counts are descriptive observations from this small pilot, not percentages or evidence of wider demand.</p></div>
+    <div class="task-grid" id="tasks"></div>
+    <div class="section-intro"><h2>Prioritised review queue</h2><p class="lead">Open the original anonymous exports locally to review the actual behaviour. The automatic priority is only a starting point for judgment.</p></div>
+    <div class="triage-list" id="triage"></div>
+    <div class="actions"><button type="button" id="export" disabled>Export decision memo (.md)</button></div>
+  </section>
+  <p class="footer-note">Do not treat a clean report as proof of MVP acceptance. Any apparent promise of open trials, a blocked core journey or mistaken belief about the club's current status warrants further review. Public launch and hosting are outside this pilot.</p>
+</main>
+<script>
+(() => {
+  'use strict';
+  const TASKS=['First impression','Find the current position','Find the founding story','Consider playing','Make an informed decision'];
+  const fields={completion:['not-tested','independent','assisted','blocked'],severity:['none','minor','major','blocking'],confusion:['unknown','no','yes'],audience:['player','coach','partner','other']};
+  const $=id=>document.getElementById(id);
+  let result=null;
+  const fail=(message)=>{throw new Error(message)};
+  const valid=(condition,message)=>{if(!condition)fail(message)};
+  const count=(arr,key,val)=>arr.filter(x=>x[key]===val).length;
+  const esc=(value)=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  function parse(doc,name) {
+    valid(doc && typeof doc==='object' && !Array.isArray(doc),name+': expected JSON object');
+    valid(doc.study==='MHAK FC offline first-click pilot' && doc.schemaVersion===1,name+': not an MVP 05 usability export');
+    valid(Array.isArray(doc.sessions) && doc.sessions.length<=100,name+': invalid sessions');
+    return doc.sessions.map((s,i)=>{
+      const origin=name+' / session '+(i+1);
+      valid(s && /^[A-Za-z0-9_-]{1,12}$/.test(s.participant||''),origin+': invalid participant code');
+      valid(fields.audience.includes(s.audience),origin+': invalid audience');
+      valid(Array.isArray(s.tasks)&&s.tasks.length===5,origin+': expected five tasks');
+      return {participant:s.participant,audience:s.audience,tasks:s.tasks.map((t,j)=>{
+        valid(t && t.task===j+1 && t.title===TASKS[j],origin+': invalid task order');
+        for(const key of ['completion','severity','confusion'])valid(fields[key].includes(t[key]),origin+': invalid '+key);
+        valid(typeof t.evidence==='string' && t.evidence.length<=500,origin+': invalid note');
+        return {completion:t.completion,severity:t.severity,confusion:t.confusion,hasNote:!!t.evidence.trim()};
+      })};
+    });
+  }
+  function summarize(sessions){
+    const ids=new Set();
+    for(const s of sessions){valid(!ids.has(s.participant),'Duplicate participant '+s.participant+'. Each participant code must be unique across exports.');ids.add(s.participant)}
+    const tasks=TASKS.map((title,i)=>{
+      const rows=sessions.map(s=>({...s.tasks[i],participant:s.participant}));
+      const tested=rows.filter(x=>x.completion!=='not-tested');
+      const serious=rows.filter(x=>x.severity==='major'||x.severity==='blocking');
+      const misconception=rows.filter(x=>x.confusion==='yes');
+      const assisted=count(tested,'completion','assisted');
+      const blocked=count(tested,'completion','blocked');
+      const major=count(rows,'severity','major');
+      const blocking=count(rows,'severity','blocking');
+      return {title,index:i+1,tested:tested.length,independent:count(tested,'completion','independent'),assisted,blocked,major,blocking,misconception:misconception.length,missingEvidence:serious.filter(x=>!x.hasNote).length,affected:[...new Set([...serious,...misconception,...tested.filter(x=>x.completion==='blocked')].map(x=>x.participant))],priority:misconception.length*1000+blocking*100+blocked*50+major*10+assisted};
+    });
+    return {sessions:sessions.length,tasks,assessed:tasks.reduce((x,t)=>x+t.tested,0),flags:tasks.reduce((x,t)=>x+t.major+t.blocking+t.misconception,0),queue:tasks.filter(x=>x.priority>0).sort((a,b)=>b.priority-a.priority||a.index-b.index)};
+  }
+  function render(data){
+    result=data;
+    $('results').classList.add('ready');
+    $('sessions').textContent=data.sessions;
+    $('assessed').textContent=data.assessed;
+    $('flags').textContent=data.flags;
+    const safety=data.tasks.some(t=>t.misconception||t.blocking||t.blocked);
+    $('gate').textContent=!data.sessions?'No participant sessions imported. MVP acceptance remains untested.':safety?'Review required: at least one mistaken-trial assumption or blocked task was recorded. Do not declare this MVP accepted.':'No immediate trial-misconception or blocked-task flags were recorded. Human review and real-participant verification are still required.';
+    $('tasks').innerHTML=data.tasks.map(t=>'<article class="task-card '+(t.priority?'has-risk':'')+'"><p class="task-num">TASK '+t.index+' OF 5</p><h3>'+esc(t.title)+'</h3><dl class="task-facts"><div><dt>Evaluated</dt><dd>'+t.tested+'</dd></div><div><dt>Independent</dt><dd>'+t.independent+'</dd></div><div><dt>Needed help</dt><dd>'+t.assisted+'</dd></div><div><dt>Blocked</dt><dd>'+t.blocked+'</dd></div><div><dt>Major or blocking</dt><dd>'+(t.major+t.blocking)+'</dd></div><div><dt>Mistaken assumptions</dt><dd>'+t.misconception+'</dd></div></dl></article>').join('');
+    $('triage').innerHTML=data.queue.length?data.queue.map(t=>'<article class="triage-item"><p class="task-num">REVIEW TASK '+t.index+'</p><h3>'+esc(t.title)+'</h3><p><strong>Flags:</strong> '+t.misconception+' mistaken-trial; '+t.blocking+' blocking issue(s); '+t.major+' major issue(s); '+t.blocked+' blocked task(s).</p><p class="codes">Participant codes to review: '+esc(t.affected.join(', ')||'See source exports')+'.</p>'+(t.missingEvidence?'<p><strong>Evidence gap:</strong> '+t.missingEvidence+' serious finding(s) lack an observation note.</p>':'')+'<p>Replay the original path, challenge the assumed cause, then retest the smallest correction.</p></article>').join(''):'<div class="surface">No serious issues were flagged in these records. Check whether tasks were really tested and the notes are complete before accepting the design.</div>';
+    $('export').disabled=false;
+  }
+  function memo(data){
+    let out=['# MHAK FC — anonymous usability decision memo','','**Qualitative evidence only.** Automatically summarised from researcher-coded records. Not proof of real participants, demand or MVP acceptance.','','## Summary','','Sessions: '+data.sessions,'Assessed tasks: '+data.assessed+' of '+(data.sessions*5),'Flagged major, blocking or mistaken assumptions: '+data.flags,'','## Tasks','','| Task | Evaluated | Independent | Assisted | Blocked | Major | Blocking | Mistaken-trial |','|---|---:|---:|---:|---:|---:|---:|---:|'];
+    for(const t of data.tasks)out.push('| '+t.index+'. '+t.title+' | '+t.tested+' | '+t.independent+' | '+t.assisted+' | '+t.blocked+' | '+t.major+' | '+t.blocking+' | '+t.misconception+' |');
+    out.push('','## Prioritised review');
+    if(!data.queue.length)out.push('No serious, blocked or assisted observations flagged. Verify data and review with participants.');
+    for(const t of data.queue)out.push('','### Task '+t.index+' — '+t.title,'- Misconception: '+t.misconception+'; blocking issues: '+t.blocking+'; major: '+t.major+'; blocked tasks: '+t.blocked+'.','- Participants to review: '+(t.affected.join(', ')||'Original export')+'.','- Evidence gaps: '+t.missingEvidence+'.','- Next decision: Reproduce the observed difficulty and test the smallest viable change.');
+    out.push('','## Decision gate','Any mistaken belief that trials are open, or blocked core journey, must be reviewed before MVP acceptance. This tool does not grant approval.','','No raw notes, names, emails or phone numbers are included in this report.');
+    return out.join('\n')+'\n';
+  }
+  $('analyse').addEventListener('click',async()=>{
+    const files=Array.from($('input-files').files||[]);
+    $('results').classList.remove('ready');result=null;$('export').disabled=true;
+    if(!files.length){$('status').textContent='Choose one or more JSON exports first.';return}
+    try {
+      const sessions=[];
+      for(const file of files){valid(file.size<2_000_000,file.name+': file is too large');valid(file.name.toLowerCase().endsWith('.json'),file.name+': expected a JSON export');const doc=JSON.parse(await file.text());sessions.push(...parse(doc,file.name))}
+      const summary=summarize(sessions);render(summary);
+      $('status').textContent='Loaded '+files.length+' local export file(s). '+summary.sessions+' anonymous session(s). No data sent.';
+    }catch(error){$('status').textContent='Could not review these exports: '+error.message;}
+  });
+  $('clear').addEventListener('click',()=>{result=null;$('input-files').value='';$('results').classList.remove('ready');$('export').disabled=true;$('status').textContent='Cleared. No study data retained.'});
+  $('export').addEventListener('click',()=>{
+    if(!result)return;
+    const blob=new Blob([memo(result)],{type:'text/markdown;charset=utf-8'});const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');a.href=url;a.download='mhak-usability-decision-memo.md';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2000);
+    $('status').textContent='Anonymous decision memo exported locally.';
+  });
+})();
+</script>
+</body>
+</html>
